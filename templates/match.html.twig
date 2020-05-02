@@ -125,6 +125,12 @@
                                 {% for i in 1..player.goals %}
                                     <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/goal.png">
                                 {% endfor %}
+                            {% elseif player.yellowCards > 0 %}
+                                {% for i in 1..player.yellowCards %}
+                                    <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/card.png">
+                                {% endfor %}
+                            {% elseif player.redCards > 0 %}
+                                <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/yellow_red.png">
                             {% endif %}
                         </td>
                         <td>
