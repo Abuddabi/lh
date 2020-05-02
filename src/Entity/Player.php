@@ -9,6 +9,7 @@ class Player
     private int $number;
     private string $name;
     private string $playStatus;
+    private int $goals;
     private int $inMinute;
     private int $outMinute;
 
@@ -17,6 +18,7 @@ class Player
         $this->number = $number;
         $this->name = $name;
         $this->playStatus = self::BENCH_PLAY_STATUS;
+        $this->goals = 0;
         $this->inMinute = 0;
         $this->outMinute = 0;
     }
@@ -31,6 +33,11 @@ class Player
         return $this->name;
     }
 
+    public function getGoals(): int
+    {
+        return $this->goals;
+    }
+
     public function getInMinute(): int
     {
         return $this->inMinute;
@@ -39,6 +46,11 @@ class Player
     public function getOutMinute(): int
     {
         return $this->outMinute;
+    }
+
+    public function addGoal(): void
+    {
+        $this->goals++;
     }
 
     public function isPlay(): bool
