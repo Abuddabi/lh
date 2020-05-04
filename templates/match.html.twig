@@ -108,6 +108,7 @@
             <table class="table table">
                 <thead>
                 <tr>
+                    <th></th>
                     <th>#</th>
                     <th>Имя</th>
                     <th></th>
@@ -116,6 +117,9 @@
                 <tbody>
                 {% for player in team.players %}
                     <tr>
+                        <td>
+                            {{ player.position }}
+                        </td>
                         <td>
                             {{ player.number }}
                         </td>
