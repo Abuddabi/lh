@@ -4,6 +4,13 @@ namespace App\Entity;
 
 class Team
 {
+    public const POSITIONS = [
+        'Вратари'       => 'В',
+        'Защитники'     => 'З',
+        'Полузащитники' => 'П',
+        'Нападающие'    => 'Н',
+    ];
+
     private string $name;
     private string $country;
     private string $logo;
@@ -24,6 +31,11 @@ class Team
         $this->players = $players;
         $this->coach = $coach;
         $this->goals = 0;
+    }
+
+    public function getPositions(): array
+    {
+        return Team::POSITIONS;
     }
 
     public function getName(): string
@@ -88,6 +100,38 @@ class Team
         return $this->goals;
     }
 
+    public function getPlayersByPosition(string $position): array
+    {
+        $playersByPosition = [];
+        foreach ($this->players as $player) {
+            if ($player->getPosition() === $position) {
+                $playersByPosition[] = $player;
+            }
+        }
+
+        if (empty($playersByPosition)) {
+            throw new \Exception(
+                sprintf(
+                    'Position "%s" is incorrect. Position should be one of: "%s".',
+                    $position,
+                    implode(", ", Team::POSITIONS)
+                )
+            );
+        }
+
+        return $playersByPosition;
+    }
+
+    public function getTotalTimeByPosition(string $position): int
+    {
+        $totalTime = 0;
+        $players = $this->getPlayersByPosition($position);
+        foreach ($players as $player) {
+            $totalTime += $player->getPlayTime();
+        }
+
+        return $totalTime;
+    }
 
     private function assertCorrectPlayers(array $players)
     {

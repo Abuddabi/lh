@@ -87,6 +87,8 @@
             {% import _self as render %}
             {{ render.renderTeamInfo(match.homeTeam) }}
             {{ render.renderTeamInfo(match.awayTeam) }}
+            {{ render.renderTotalTimeByPosition(match.homeTeam) }}
+            {{ render.renderTotalTimeByPosition(match.awayTeam) }}
         </div>
     </div>
 </div>
@@ -107,19 +109,15 @@
         <div class="card-body">
             <table class="table table">
                 <thead>
-                <tr>
-                    <th></th>
-                    <th>#</th>
-                    <th>Имя</th>
-                    <th></th>
-                </tr>
+                    <tr>
+                        <th>#</th>
+                        <th>Имя</th>
+                        <th></th>
+                    </tr>
                 </thead>
                 <tbody>
                 {% for player in team.players %}
                     <tr>
-                        <td>
-                            {{ player.position }}
-                        </td>
                         <td>
                             {{ player.number }}
                         </td>
@@ -142,6 +140,43 @@
                         </td>
                     </tr>
                 {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endmacro %}
+{% macro renderTotalTimeByPosition(team) %}
+    <div class="card mb-3">
+        <div class="card-header text-center">
+            <div>
+                <strong>
+                    Статистика времени по позициям
+                </strong>
+            </div>
+            <div>
+                <small>
+                    <strong>{{ team.name }}</strong>
+                    {{ team.country }}
+                </small>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table">
+                <thead>
+                    <tr>
+                        <th>Позиция</th>
+                        <th class="text-center">Общее время</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for positionFull, position in team.positions %}
+                        <tr>
+                            <td>{{ positionFull }}</td>
+                            <td class="text-center">
+                                {{ team.getTotalTimeByPosition(position) }}
+                            </td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
