@@ -59,7 +59,8 @@
                 </div>
                 <div class="card-body">
                     {% for message in match.messages|reverse %}
-                        {% set interestingMessageTypes = [constant('App\\Entity\\Match::GOAL_MESSAGE_TYPE'), constant('App\\Entity\\Match::YELLOW_CARD_MESSAGE_TYPE'), constant('App\\Entity\\Match::RED_CARD_MESSAGE_TYPE'), constant('App\\Entity\\Match::DANGEROUS_MOMENT_MESSAGE_TYPE')] %}
+                        {% set interestingMessageTypes = [constant('App\\Entity\\Match::GOAL_MESSAGE_TYPE'), constant('App\\Entity\\Match::YELLOW_CARD_MESSAGE_TYPE'), constant('App\\Entity\\Match::SECOND_YELLOW_CARD_MESSAGE_TYPE'), constant('App\\Entity\\Match::RED_CARD_MESSAGE_TYPE'), constant('App\\Entity\\Match::DANGEROUS_MOMENT_MESSAGE_TYPE')] %}
+
                         <div class="row mb-2 {{ message.type in interestingMessageTypes ? 'font-weight-bold' : '' }}">
                             <div class="col-2">
                                 {{ message.minute }}’
@@ -71,8 +72,10 @@
                                     <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/goal.png">
                                 {% elseif message.type == constant('App\\Entity\\Match::YELLOW_CARD_MESSAGE_TYPE') %}
                                     <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/card.png">
-                                {% elseif message.type == constant('App\\Entity\\Match::RED_CARD_MESSAGE_TYPE') %}
+                                {% elseif message.type == constant('App\\Entity\\Match::SECOND_YELLOW_CARD_MESSAGE_TYPE') %}
                                     <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/yellow_red.png">
+                                {% elseif message.type == constant('App\\Entity\\Match::RED_CARD_MESSAGE_TYPE') %}
+                                    <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/red_card.png">
                                 {% endif %}
                             </div>
                             <div class="col-9">
@@ -85,17 +88,15 @@
         </div>
         <div class="col-md-4">
             {% import _self as render %}
-            {{ render.renderTeamInfo(match.homeTeam) }}
-            {{ render.renderTeamInfo(match.awayTeam) }}
-            {{ render.renderTotalTimeByPosition(match.homeTeam) }}
-            {{ render.renderTotalTimeByPosition(match.awayTeam) }}
+            {{ render.renderTeamInfo(match.homeTeam, positionStats.homeTeam) }}
+            {{ render.renderTeamInfo(match.awayTeam, positionStats.awayTeam) }}
         </div>
     </div>
 </div>
 </body>
 </html>
 
-{% macro renderTeamInfo(team) %}
+{% macro renderTeamInfo(team, positionStats) %}
     <div class="card mb-3">
         <div class="card-header text-center">
             <div>
@@ -107,7 +108,8 @@
             </div>
         </div>
         <div class="card-body">
-            <table class="table table">
+            <h5>Статистика игроков</h5>
+            <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -127,12 +129,16 @@
                                 {% for i in 1..player.goals %}
                                     <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/goal.png">
                                 {% endfor %}
-                            {% elseif player.yellowCards > 0 %}
-                                {% for i in 1..player.yellowCards %}
+                            {% endif %}
+
+                            {% if player.yellowCards == 1 %}
                                     <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/card.png">
-                                {% endfor %}
-                            {% elseif player.redCards > 0 %}
+                            {% elseif player.yellowCards == 2 %}
+                                <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/card.png">
                                 <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/yellow_red.png">
+                            {% endif %}
+                            {% if player.redCards > 0 %}
+                                <img src="https://www.soccer.ru/sites/all/themes/newtheme/images/events-icons/red_card.png">
                             {% endif %}
                         </td>
                         <td>
@@ -142,41 +148,25 @@
                 {% endfor %}
                 </tbody>
             </table>
-        </div>
-    </div>
-{% endmacro %}
-{% macro renderTotalTimeByPosition(team) %}
-    <div class="card mb-3">
-        <div class="card-header text-center">
-            <div>
-                <strong>
-                    Статистика времени по позициям
-                </strong>
-            </div>
-            <div>
-                <small>
-                    <strong>{{ team.name }}</strong>
-                    {{ team.country }}
-                </small>
-            </div>
-        </div>
-        <div class="card-body">
-            <table class="table table">
+            <h5 class="pt-3">Статистика по позициям</h5>
+            <table class="table table-striped table-bordered">
                 <thead>
-                    <tr>
-                        <th>Позиция</th>
-                        <th class="text-center">Общее время</th>
-                    </tr>
+                <tr>
+                    <th>Позиция</th>
+                    <th>Время</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {% for positionFull, position in team.positions %}
-                        <tr>
-                            <td>{{ positionFull }}</td>
-                            <td class="text-center">
-                                {{ team.getTotalTimeByPosition(position) }}
-                            </td>
-                        </tr>
-                    {% endfor %}
+                {% for position, time in positionStats %}
+                    <tr>
+                        <td>
+                            {{ position }}
+                        </td>
+                        <td>
+                            {{ time }}’
+                        </td>
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>

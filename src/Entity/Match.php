@@ -4,18 +4,20 @@ namespace App\Entity;
 
 class Match
 {
-    public const INFO_MESSAGE_TYPE             = 'info';
-    public const DANGEROUS_MOMENT_MESSAGE_TYPE = 'dangerousMoment';
-    public const GOAL_MESSAGE_TYPE             = 'goal';
-    public const YELLOW_CARD_MESSAGE_TYPE      = 'yellowCard';
-    public const RED_CARD_MESSAGE_TYPE         = 'redCard';
-    public const REPLACE_PLAYER_MESSAGE_TYPE   = 'replacePlayer';
+    public const INFO_MESSAGE_TYPE                  = 'info';
+    public const DANGEROUS_MOMENT_MESSAGE_TYPE      = 'dangerousMoment';
+    public const GOAL_MESSAGE_TYPE                  = 'goal';
+    public const YELLOW_CARD_MESSAGE_TYPE           = 'yellowCard';
+    public const SECOND_YELLOW_CARD_MESSAGE_TYPE    = 'secondYellowCard';
+    public const RED_CARD_MESSAGE_TYPE              = 'redCard';
+    public const REPLACE_PLAYER_MESSAGE_TYPE        = 'replacePlayer';
 
     private const MESSAGE_TYPES = [
         self::INFO_MESSAGE_TYPE,
         self::DANGEROUS_MOMENT_MESSAGE_TYPE,
         self::GOAL_MESSAGE_TYPE,
         self::YELLOW_CARD_MESSAGE_TYPE,
+        self::SECOND_YELLOW_CARD_MESSAGE_TYPE,
         self::RED_CARD_MESSAGE_TYPE,
         self::REPLACE_PLAYER_MESSAGE_TYPE,
     ];

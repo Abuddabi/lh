@@ -3,6 +3,8 @@
 namespace App\Service;
 
 use App\Entity\Match;
+use App\Entity\Player;
+use App\Entity\Team;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -23,6 +25,7 @@ class HtmlSaver
     {
         $content =  $this->twig->render('match.html.twig', [
             'match' => $match,
+            'positionStats' => $this->buildPositionStats($match),
             'message' => getenv('MESSAGE') ?? ''
         ]);
 
@@ -41,6 +44,28 @@ class HtmlSaver
                 $this->resultDir,
                 "{$match->getId()}.html"
             ]
+        );
+    }
+
+    private function buildPositionStats(Match $match): array
+    {
+        return [
+            'homeTeam' => $this->buildTeamPositionStats($match->getHomeTeam()),
+            'awayTeam' => $this->buildTeamPositionStats($match->getAwayTeam()),
+        ];
+    }
+
+    private function buildTeamPositionStats(Team $team): array
+    {
+        return array_reduce(
+            $team->getPlayers(),
+            function (array $stats, Player $player) {
+                $stats[$player->getPosition()] = $stats[$player->getPosition()] ?? 0;
+                $stats[$player->getPosition()] += $player->getPlayTime();
+
+                return $stats;
+            },
+            []
         );
     }
 }
